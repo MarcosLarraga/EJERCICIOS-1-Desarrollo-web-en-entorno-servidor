@@ -1,45 +1,56 @@
-﻿using Models;
+﻿using System;
+using System.Collections.Generic;
 
-ProgramaEducativo programa = new ProgramaEducativo();
-
-// Crear asignaturas
-Asignatura servidor = new Asignatura("Servidor", 6);
-var cliente = new Asignatura("Cliente", 4);
-Asignatura diseño = new("Diseño", 8);
-
-// Crear estudiantes
-var estudiante1 = new Estudiante("Vanessa Llorente");
-Estudiante estudiante2 = new Estudiante("Alejandro Giménez");
-
-// Añadir estudiantes al programa educativo
-programa.AñadirEstudiante(estudiante1);
-programa.AñadirEstudiante(estudiante2);
-
-// Asignar calificaciones
-estudiante1.AñadirCalificacion(servidor, 9.5);
-estudiante1.AñadirCalificacion(cliente, 8.0);
-estudiante1.AñadirCalificacion(diseño, 9.0);
-
-estudiante2.AñadirCalificacion(servidor, 7.5);
-estudiante2.AñadirCalificacion(cliente, 8.5);
-
-// Mostrar estudiantes
-programa.MostrarEstudiantes();
-
-// Mostrar calificaciones de un estudiante específico
-Estudiante estudianteSeleccionado = programa.ObtenerEstudiante("Vanessa Llorente");
-if (estudianteSeleccionado != null)
+class Program
 {
-    estudianteSeleccionado.MostrarCalificaciones();
-    double promedio = estudianteSeleccionado.CalcularPromedio();
-    Console.WriteLine($"Promedio de {estudianteSeleccionado.Nombre}: {promedio:F2}");
-}
+    static void Main()
+    {
+        // Diccionario que almacena las calificaciones de los estudiantes
+        Dictionary<string, Dictionary<string, double>> estudiantes = new Dictionary<string, Dictionary<string, double>>
+        {
+            { "Juan", new Dictionary<string, double> { { "Matemáticas", 85 }, { "Historia", 90 } } },
+            { "María", new Dictionary<string, double> { { "Matemáticas", 95 }, { "Ciencias", 88 } } },
+            { "Pedro", new Dictionary<string, double> { { "Ciencias", 78 }, { "Historia", 85 } } } // Nuevo estudiante
+        };
 
-// Mostrar calificaciones del segundo estudiante
-estudianteSeleccionado = programa.ObtenerEstudiante("Alejandro Giménez");
-if (estudianteSeleccionado != null)
-{
-    estudianteSeleccionado.MostrarCalificaciones();
-    double promedio = estudianteSeleccionado.CalcularPromedio();
-    Console.WriteLine($"Promedio de {estudianteSeleccionado.Nombre}: {promedio:F2}");
+        // Datos para modificar
+        string nombreEstudiante = "Pedro"; // Cambié a "Pedro"
+        string asignatura = "Ciencias"; // Asignatura existente
+        double nuevaCalificacion = 80; // Nueva calificación
+
+        // Modificar la calificación
+        ModificarCalificacion(estudiantes, nombreEstudiante, asignatura, nuevaCalificacion);
+        
+        // Ejemplo de intentar modificar una asignatura no registrada
+        string otraAsignatura = "Matemáticas"; // Asignatura no registrada para Pedro
+        ModificarCalificacion(estudiantes, nombreEstudiante, otraAsignatura, 90);
+    }
+
+    static void ModificarCalificacion(Dictionary<string, Dictionary<string, double>> estudiantes, string nombreEstudiante, string asignatura, double nuevaCalificacion)
+    {
+        // Verificamos si el estudiante existe
+        if (estudiantes.ContainsKey(nombreEstudiante))
+        {
+            // Obtenemos las calificaciones del estudiante
+            var calificaciones = estudiantes[nombreEstudiante];
+
+            // Verificamos si la asignatura existe
+            if (calificaciones.ContainsKey(asignatura))
+            {
+                // Modificamos la calificación
+                calificaciones[asignatura] = nuevaCalificacion;
+                Console.WriteLine($"La calificación de {nombreEstudiante} en {asignatura} se ha modificado a {nuevaCalificacion}.");
+            }
+            else
+            {
+                // Mensaje de error si la asignatura no existe
+                Console.WriteLine($"Error: {nombreEstudiante} no tiene registrada la asignatura {asignatura}.");
+            }
+        }
+        else
+        {
+            // Mensaje de error si el estudiante no existe
+            Console.WriteLine($"Error: No se encontró al estudiante {nombreEstudiante}.");
+        }
+    }
 }
