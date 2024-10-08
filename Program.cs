@@ -1,45 +1,84 @@
-﻿using Models;
+﻿using System;
+using System.Collections.Generic;
+//EJERCICIO 2
 
-ProgramaEducativo programa = new ProgramaEducativo();
-
-// Crear asignaturas
-Asignatura servidor = new Asignatura("Servidor", 6);
-var cliente = new Asignatura("Cliente", 4);
-Asignatura diseño = new("Diseño", 8);
-
-// Crear estudiantes
-var estudiante1 = new Estudiante("Vanessa Llorente");
-Estudiante estudiante2 = new Estudiante("Alejandro Giménez");
-
-// Añadir estudiantes al programa educativo
-programa.AñadirEstudiante(estudiante1);
-programa.AñadirEstudiante(estudiante2);
-
-// Asignar calificaciones
-estudiante1.AñadirCalificacion(servidor, 9.5);
-estudiante1.AñadirCalificacion(cliente, 8.0);
-estudiante1.AñadirCalificacion(diseño, 9.0);
-
-estudiante2.AñadirCalificacion(servidor, 7.5);
-estudiante2.AñadirCalificacion(cliente, 8.5);
-
-// Mostrar estudiantes
-programa.MostrarEstudiantes();
-
-// Mostrar calificaciones de un estudiante específico
-Estudiante estudianteSeleccionado = programa.ObtenerEstudiante("Vanessa Llorente");
-if (estudianteSeleccionado != null)
+class Estudiante
 {
-    estudianteSeleccionado.MostrarCalificaciones();
-    double promedio = estudianteSeleccionado.CalcularPromedio();
-    Console.WriteLine($"Promedio de {estudianteSeleccionado.Nombre}: {promedio:F2}");
+    public string Nombre { get; set; }
+
+    public Estudiante(string nombre)
+    {
+        Nombre = nombre;
+    }
 }
 
-// Mostrar calificaciones del segundo estudiante
-estudianteSeleccionado = programa.ObtenerEstudiante("Alejandro Giménez");
-if (estudianteSeleccionado != null)
+class ProgramaEducativo
 {
-    estudianteSeleccionado.MostrarCalificaciones();
-    double promedio = estudianteSeleccionado.CalcularPromedio();
-    Console.WriteLine($"Promedio de {estudianteSeleccionado.Nombre}: {promedio:F2}");
+    private List<Estudiante> estudiantes;
+
+    public ProgramaEducativo()
+    {
+        estudiantes = new List<Estudiante>();
+    }
+
+    // Método para agregar un nuevo estudiante
+    public void AgregarEstudiante(string nombre)
+    {
+        estudiantes.Add(new Estudiante(nombre));
+        Console.WriteLine($"El estudiante {nombre} ha sido agregado.");
+    }
+
+    // Método para eliminar un estudiante por su nombre
+    public void EliminarEstudiante(string nombre)
+    {
+        // Buscar al estudiante por nombre
+        Estudiante estudianteAEliminar = estudiantes.Find(e => e.Nombre == nombre);
+
+        if (estudianteAEliminar != null)
+        {
+            // Si se encuentra, eliminar el estudiante
+            estudiantes.Remove(estudianteAEliminar);
+            Console.WriteLine($"El estudiante {nombre} ha sido eliminado.");
+        }
+        else
+        {
+            // Si no se encuentra, mostrar mensaje de error
+            Console.WriteLine($"Error: El estudiante {nombre} no se encuentra en el sistema.");
+        }
+    }
+
+    // Método para listar todos los estudiantes
+    public void ListarEstudiantes()
+    {
+        Console.WriteLine("Lista de estudiantes:");
+        foreach (Estudiante estudiante in estudiantes)
+        {
+            Console.WriteLine(estudiante.Nombre);
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        ProgramaEducativo programa = new ProgramaEducativo();
+
+        // Agregar algunos estudiantes
+        programa.AgregarEstudiante("Juan");
+        programa.AgregarEstudiante("María");
+        programa.AgregarEstudiante("Pedro");
+
+        // Listar los estudiantes
+        programa.ListarEstudiantes();
+
+        // Intentar eliminar un estudiante existente
+        programa.EliminarEstudiante("María");
+
+        // Intentar eliminar un estudiante que no existe
+        programa.EliminarEstudiante("Luis");
+
+        // Listar los estudiantes después de la eliminación
+        programa.ListarEstudiantes();
+    }
 }
